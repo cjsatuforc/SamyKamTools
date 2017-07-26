@@ -31,7 +31,8 @@ from PIL import Image, ImageDraw, ImageFont
 from bluetooth import *
 from violentmag import *
 
-webPort = 5000 #WebServer port
+webPort = 5004 #WebServer port
+slowMenu = 0.3 #Time to slow the scrolling using the rotary encoder | 0.3 at 1MHz for i2c_baudrate
 
 MAGPIN = 7
 WAITINTRO = 2
@@ -381,7 +382,7 @@ def runMagspoof(): #MagSpoof
     sleep(2)
     menuInit(activeMenu, 0, 0)
 
-cardOr = ''
+cardOne = ''
 def makeMagspoof(): #MagSpoof compiler
     headf = getcwd() + headMFile
     tailf = getcwd() + tailMFile
@@ -394,10 +395,10 @@ def makeMagspoof(): #MagSpoof compiler
         filem = open(getcwd() + '/MagSpoofPI.c', 'w')
         tTrack = ''
 
-        if cardOr == '':
+        if cardOne == '':
             tTrack = headMGPI + addNtracks() + formatTracks() + tailMGPI
         else:
-            tTrack = headMGPI + addNtracks() + one + tailMGPI
+            tTrack = headMGPI + addNtracks() + cardOne + tailMGPI
             
         filem.write(tTrack)
         filem.close()
@@ -489,12 +490,12 @@ def menuInit(menuName, wayGo, menuMain):
         disp.display()
 
 def compileCard(num):
-    global countTracks, cardOr
-    cardOr = '10'
+    global countTracks, cardOne
     countTracks = 1
     print cardsMenu[num]
-    makeMagspoof(cardsMenu[num])
-    cardOr = ''
+    cardOne = cardsMenu[num]
+    genMakefile()
+    cardOne = ''
 
 # Menu control
 menuTop = ["SamyKam", " ", " "," ","Update"]
@@ -529,7 +530,7 @@ def mainWhile():
         #Negative value in the encoder means foward in the menu!
         delta = encoder.get_steps()
         if (delta != 0): #Slowing down the encoder data, necessary to have a good scrolling
-            sleep(0.1)
+            sleep(slowMenu)
         delta = encoder.get_steps()
         if (delta != 0):
             menuFlow(delta)
@@ -545,7 +546,7 @@ def mainWhile():
             fromw = 0
             menuInit(activeMenu, 0, activeTitle)
             loadTracks()
-            sleep(2)
+            sleep(1)
         elif (sw_state == 1) and (activeMenu == cardsMenu):
             if (counter == 0):
                 fromw = 0
@@ -555,7 +556,8 @@ def mainWhile():
                 #sleep(1)
             else:
                 compileCard(counter)
-                sleep(1)
+		counter = 0
+            sleep(1)
         last_state = sw_state
 try:
 	mainThread = Thread(target=mainWhile) # Create main thread
