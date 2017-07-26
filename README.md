@@ -31,6 +31,7 @@ To do this edit the config with sudo nano /boot/config.txt
 and add to the end of the file
 dtparam=i2c_baudrate=1000000
 
+More details: https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage
 
 ###Manual
 
