@@ -570,10 +570,11 @@ try:
 		runWebserver()
 	
 except KeyboardInterrupt:
-	print 'Closing safely SamyKam... wait..'
+	print 'Closing SamyKam services... wait..'
 	if statusBluetooth == 'On':
 		runBluetooth()
 	if statusWebserver == 'On':
 		runWebserver()
 	sleep(3)
+	print 'Done!'
 	exit()
