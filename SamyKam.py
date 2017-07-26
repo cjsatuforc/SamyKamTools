@@ -570,8 +570,10 @@ try:
 		runWebserver()
 	
 except KeyboardInterrupt:
-	webshut = shutWeb()
-	makep = runCommand('sudo hciconfig hci0 noscan')
 	print 'Closing safely SamyKam... wait..'
+	if statusBluetooth == 'On':
+		runBluetooth()
+	if statusWebserver == 'On':
+		runWebserver()
 	sleep(3)
 	exit()
