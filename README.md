@@ -22,6 +22,16 @@ Mini-shell for basic commands implementing Bluetooth and Webserver independently
 
 ##Installation 
 
+###Recommendations
+
+Speeding Up the Display
+For the best performance, especially if you are doing fast animations, you'll want to tweak the I2C core to run at 1MHz. By default it may be 100KHz or 400KHz
+
+To do this edit the config with sudo nano /boot/config.txt
+and add to the end of the file
+dtparam=i2c_baudrate=1000000
+
+
 ###Manual
 
 ```
